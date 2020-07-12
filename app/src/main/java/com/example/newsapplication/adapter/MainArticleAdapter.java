@@ -53,9 +53,11 @@ public class MainArticleAdapter extends RecyclerView.Adapter<MainArticleAdapter.
         }
 
         String imageUrl = articleModel.getUrlToImage();
-        Log.i("Image", imageUrl);
-        Picasso.with(context).load(imageUrl).into(viewHolder.articleImage);
-        viewHolder.articleAdapterParentLinear.setTag(articleModel);
+        if (imageUrl != null) {
+            Log.i("Image", imageUrl);
+            Picasso.with(context).load(imageUrl).into(viewHolder.articleImage);
+            viewHolder.articleAdapterParentLinear.setTag(articleModel);
+        }
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.example.newsapplication.activities;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,27 +35,36 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements OnRecyclerViewItemClickListener {
 
     public static final String API_KEY = BuildConfig.ApiKey;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         final RecyclerView mainRecyclerView = findViewById(R.id.activity_main_rv);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this , LinearLayoutManager.VERTICAL , false);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         mainRecyclerView.setLayoutManager(linearLayoutManager);
 
         final ApiInterface apiServices = ApiClient.getClient().create(ApiInterface.class);
 
-        Call<ResponseModel> call = apiServices.getIndianNews("in","sports",API_KEY);
+        Call<ResponseModel> call = apiServices.getIndianNews("in", "sports", API_KEY);
         call.enqueue(new Callback<ResponseModel>() {
             @Override
             public void onResponse(Call<ResponseModel> call, Response<ResponseModel> response) {
                 assert response.body() != null;
-                if (response.body().getStatus().equals("ok")){
+                if (response.body().getStatus().equals("ok")) {
                     List<Article> articleList = response.body().getArticles();
-                    if (articleList.size() > 0){
+                    if (articleList.size() > 0) {
                         Log.i("ListAkash", "List Contains elements");
                         int number = response.body().getTotalResults();
                         Log.i("ListAkash", Integer.toString(number));
@@ -70,23 +83,32 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
 
             @Override
             public void onFailure(Call<ResponseModel> call, Throwable t) {
-                Log.i("error" , t.toString());
+                Log.i("error", t.toString());
             }
         });
     }
-    public void onItemClick(int position, View view){
-        switch (view.getId()){
+
+    public void onItemClick(int position, View view) {
+        switch (view.getId()) {
             case R.id.article_adapter_ll_parent:
                 Article article = (Article) view.getTag();
-                if (!TextUtils.isEmpty(article.getUrl())){
-                    Log.i("url clicked" , article.getUrl());
+                if (!TextUtils.isEmpty(article.getUrl())) {
+                    Log.i("url clicked", article.getUrl());
                     Intent webView = new Intent(this, WebActivity.class);
                     webView.putExtra("url", article.getUrl());
-                    Log.i("ListAkash","webView");
+                    Log.i("ListAkash", "webView");
                     startActivity(webView);
                 }
                 break;
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
