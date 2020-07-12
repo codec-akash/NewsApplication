@@ -27,6 +27,11 @@
             android:padding="5dp"
             />
 
+        <ProgressBar
+            android:id="@+id/image_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ImageView
             android:id="@+id/article_adapter_image"
             android:layout_width="match_parent"
