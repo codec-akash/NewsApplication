@@ -130,6 +130,11 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
                 country = "in";
                 loadHome(country);
                 break;
+
+            case R.id.nav_fav:
+                Intent intent = new Intent(MainActivity.this,AddFavorite.class);
+                startActivity(intent);
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

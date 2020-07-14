@@ -57,7 +57,6 @@ public class MainArticleAdapter extends RecyclerView.Adapter<MainArticleAdapter.
         if (imageUrl != null) {
             Log.i("Image", imageUrl);
             Picasso.with(context).load(imageUrl).into(viewHolder.articleImage);
-            viewHolder.imageProgressBar.setVisibility(View.GONE);
             viewHolder.articleAdapterParentLinear.setTag(articleModel);
         }
     }
@@ -71,7 +70,6 @@ public class MainArticleAdapter extends RecyclerView.Adapter<MainArticleAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleText;
         private LinearLayout articleAdapterParentLinear;
-        private ProgressBar imageProgressBar;
         private ImageView articleImage;
 
         public ViewHolder(final View view) {
@@ -80,7 +78,6 @@ public class MainArticleAdapter extends RecyclerView.Adapter<MainArticleAdapter.
             titleText = view.findViewById(R.id.article_adapter_titleText);
             articleAdapterParentLinear = view.findViewById(R.id.article_adapter_ll_parent);
             articleImage = view.findViewById(R.id.article_adapter_image);
-            imageProgressBar = view.findViewById(R.id.image_progress_bar);
 
             articleAdapterParentLinear.setOnClickListener(new View.OnClickListener() {
                 @Override
