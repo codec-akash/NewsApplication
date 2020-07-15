@@ -2,6 +2,7 @@ package com.example.newsapplication.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,6 +66,9 @@ public class AddFavorite extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(AddFavorite.this, favorites.toString(), Toast.LENGTH_SHORT).show();
                 addList("key" , favorites);
+                Intent intent = new Intent(AddFavorite.this , showFavorites.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -167,5 +171,23 @@ public class AddFavorite extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void clearData(View view){
+        checkBoxBusiness.setChecked(false);
+        checkBoxSports.setChecked(false);
+        checkBoxHealth.setChecked(false);
+        checkBoxScience.setChecked(false);
+        checkboxEntertainment.setChecked(false);
+        favorites.clear();
+        prefs.edit().clear().commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(AddFavorite.this , MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

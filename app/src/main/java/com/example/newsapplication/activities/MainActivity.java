@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,7 +29,11 @@ import com.example.newsapplication.rests.ApiClient;
 import com.example.newsapplication.rests.ApiInterface;
 import com.example.newsapplication.utlis.OnRecyclerViewItemClickListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
     ApiInterface apiServices;
     RecyclerView mainRecyclerView;
     NavigationView navigationView;
+    SharedPreferences prefs;
+    HashSet<String> set;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
         setContentView(R.layout.activity_main);
 
         country = "in";
-        category = "sports";
+        prefs = getSharedPreferences("SharedPreference",MODE_PRIVATE);
+
+        set = new HashSet<>();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,17 +88,15 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
     }
 
     public void onItemClick(int position, View view) {
-        switch (view.getId()) {
-            case R.id.article_adapter_ll_parent:
-                Article article = (Article) view.getTag();
-                if (!TextUtils.isEmpty(article.getUrl())) {
-                    Log.i("url clicked", article.getUrl());
-                    Intent webView = new Intent(this, WebActivity.class);
-                    webView.putExtra("url", article.getUrl());
-                    Log.i("ListAkash", "webView");
-                    startActivity(webView);
-                }
-                break;
+        if (view.getId() == R.id.article_adapter_ll_parent) {
+            Article article = (Article) view.getTag();
+            if (!TextUtils.isEmpty(article.getUrl())) {
+                Log.i("url clicked", article.getUrl());
+                Intent webView = new Intent(this, WebActivity.class);
+                webView.putExtra("url", article.getUrl());
+                Log.i("List", "webView");
+                startActivity(webView);
+            }
         }
     }
 
@@ -132,10 +139,18 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
                 break;
 
             case R.id.nav_fav:
-                Intent intent = new Intent(MainActivity.this,AddFavorite.class);
-                startActivity(intent);
+                loadList();
+                Log.i("log" , set.toString());
+                if (set.size() > 0){
+                    Intent intent = new Intent(MainActivity.this, showFavorites.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this,AddFavorite.class);
+                    startActivity(intent);
+                }
                 break;
         }
+
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -182,9 +197,9 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
                 if (response.body().getStatus().equals("ok")) {
                     List<Article> articleList = response.body().getArticles();
                     if (articleList.size() > 0) {
-                        Log.i("ListAkash", "List Contains elements");
+                        Log.i("List", "List Contains elements");
                         int number = response.body().getTotalResults();
-                        Log.i("ListAkash", Integer.toString(number));
+                        Log.i("List", Integer.toString(number));
                         Toast.makeText(MainActivity.this, Integer.toString(number), Toast.LENGTH_SHORT).show();
 
                         final MainArticleAdapter mainArticleAdapter = new MainArticleAdapter(articleList);
@@ -203,6 +218,17 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
                 Log.i("error", t.toString());
             }
         });
+    }
+
+    public void loadList(){
+        Gson gson = new Gson();
+        String json = prefs.getString("key", "null");
+        Type type = new TypeToken<HashSet<String>>() {}.getType();
+        set = gson.fromJson(json,type);
+        if (set == null){
+            set = new HashSet<>();
+        }
+        Log.i("key" , set.toString());
     }
 
     @Override
