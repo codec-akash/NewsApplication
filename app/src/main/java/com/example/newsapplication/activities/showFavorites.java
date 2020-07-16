@@ -7,17 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaDrm;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.newsapplication.BuildConfig;
 import com.example.newsapplication.R;
@@ -99,6 +96,12 @@ public class showFavorites extends AppCompatActivity implements OnRecyclerViewIt
             msg = "No favorite Selected";
         } else {
             showArrayList();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    displayNews();
+                }
+            },5);
         }
     }
 
@@ -179,5 +182,4 @@ public class showFavorites extends AppCompatActivity implements OnRecyclerViewIt
             }
         }
     }
-
 }
