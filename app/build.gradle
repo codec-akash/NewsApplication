@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-def API_KEY = '"' + ApiKey + '"' ?: '"API Key not found"'
-def STRING = 'String'
+//def API_KEY = '"' + ApiKey + '"' ?: '"API Key not found"'
+//def STRING = 'String'
 
 android {
     compileSdkVersion 29
@@ -16,9 +16,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        each{type ->
-            type.buildConfigField STRING, "ApiKey", API_KEY
-        }
+//        each{type ->
+//            type.buildConfigField STRING, "ApiKey", API_KEY
+//        }
     }
 
     buildTypes {

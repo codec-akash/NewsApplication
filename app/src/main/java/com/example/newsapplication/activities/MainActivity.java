@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnRecyclerViewItemClickListener , NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String API_KEY = BuildConfig.ApiKey;
+    public static final String API_KEY = "fbe8d05c5cec4782a06ac9a01767a323";
     private DrawerLayout drawerLayout;
     private String country;
     private String category;
