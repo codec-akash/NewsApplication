@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -85,6 +88,24 @@ public class MainActivity extends AppCompatActivity implements OnRecyclerViewIte
             loadHome(country);
             navigationView.setCheckedItem(R.id.nav_home);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.appbar_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.language:
+                Intent languageIntent = new Intent(Settings.ACTION_LOCALE_SETTINGS);
+                startActivity(languageIntent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onItemClick(int position, View view) {
